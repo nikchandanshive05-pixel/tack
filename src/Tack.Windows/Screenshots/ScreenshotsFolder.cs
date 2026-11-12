@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Shell;
@@ -16,7 +19,10 @@ public static unsafe class ScreenshotsFolder
     /// </summary>
     public static string Find()
     {
-        var folder = Known() ?? Fallback(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+        var folder = FromRegistry()
+            ?? Known()
+            ?? FromMyPictures()
+            ?? Fallback(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
         try
         {
             Directory.CreateDirectory(folder);
@@ -26,6 +32,32 @@ public static unsafe class ScreenshotsFolder
             // Watching it will say so.
         }
         return folder;
+    }
+
+    static string? FromRegistry()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders");
+            if (key == null) return null;
+            var val = key.GetValue("{B7BEDE81-DF94-4783-8285-86586CB0A175}")
+                ?? key.GetValue("{B7BEDE81-DF94-4682-A7D8-57A52620B86F}");
+            if (val is string raw && !string.IsNullOrWhiteSpace(raw))
+            {
+                var expanded = Environment.ExpandEnvironmentVariables(raw);
+                if (Directory.Exists(expanded)) return expanded;
+            }
+        }
+        catch {}
+        return null;
+    }
+
+    static string? FromMyPictures()
+    {
+        var myPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+        if (string.IsNullOrEmpty(myPictures)) return null;
+        var cand = Path.Combine(myPictures, "Screenshots");
+        return Directory.Exists(cand) ? cand : null;
     }
 
     static string Fallback(string profile) => Path.Combine(profile, "Pictures", "Screenshots");

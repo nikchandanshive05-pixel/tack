@@ -26,7 +26,8 @@ public static unsafe class SnippingTool
         {
             return false;
         }
-        return process.Family() == TrustedSnipper.Family
+        var family = process.Family();
+        return (family != null && TrustedSnipper.Families.Contains(family, StringComparer.OrdinalIgnoreCase))
             || (process.Image() is { } image && TrustedSnipper.IsTrusted(image, TrustedSnipper.Folders));
     }
 }

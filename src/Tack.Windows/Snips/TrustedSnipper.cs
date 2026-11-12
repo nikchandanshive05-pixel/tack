@@ -7,8 +7,12 @@ namespace Tack.Windows.Snips;
 /// </summary>
 static class TrustedSnipper
 {
-    /// <summary>Snipping Tool's package family: its publisher's signature is part of it, so no other app can have it.</summary>
-    public const string Family = "Microsoft.ScreenSketch_8wekyb3d8bbwe";
+    /// <summary>Snipping Tool's package families across Windows 10 and 11.</summary>
+    public static readonly string[] Families =
+    [
+        "Microsoft.ScreenSketch_8wekyb3d8bbwe",
+        "MicrosoftWindows.Client.CBS_cw5n1h2txyewy"
+    ];
 
     /// <summary>
     /// The programs that put Win + Shift + S captures on the clipboard, trusted
