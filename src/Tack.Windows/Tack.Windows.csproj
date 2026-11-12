@@ -3,7 +3,7 @@
   <!-- Tack's use of Windows: Win32 through CsWin32, and WinRT where it is simpler. -->
   <PropertyGroup>
     <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
-    <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IsAotCompatible>true</IsAotCompatible>
     <!-- Tack ships for 64-bit Windows only; x64 and ARM64 share these struct layouts. -->

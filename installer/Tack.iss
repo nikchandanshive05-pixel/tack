@@ -142,22 +142,6 @@ Filename: "{app}\Tack.exe"; Description: "{cm:LaunchTack}"; Flags: nowait postin
 
 function InitializeSetup: Boolean;
 begin
-  Result := False;
-  { WINDOWS 10 (0.2 BRIDGE): change nothing. An update from 0.2 starts the
-    old Tack again; run by hand, Setup says why it stops. Either way it
-    exits with an error code. }
-  if not IsWindows11OrLater then
-  begin
-    if IsUpdate then
-    begin
-      Log('Windows is older than 11: leaving Tack 0.2 as it is.');
-      if WantsRestart then
-        RestartOldTack;
-    end
-    else
-      SuppressibleMsgBox(CustomMessage('NeedsWindows11'), mbCriticalError, MB_OK, IDOK);
-    Exit;
-  end;
   Result := True;
 end;
 
